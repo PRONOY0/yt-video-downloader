@@ -1,0 +1,45 @@
+.home-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.home-container h1 {
+  font-size: 4vw;
+}
+
+.home-container p {
+  font-size: 1.5vw;
+  opacity: 0.55;
+  color: black;
+  opacity: 0.5;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.btn-submit {
+  width: 10%;
+  padding: 2rem;
+  gap: 0.5rem;
+  font-size: 1rem !important;
+}
+
+.input-field-quality-drop-down-container {
+  display: flex;
+  align-items: center;
+  color: #d9d9d9;
+}
+
+.hoverMenuItems {
+  color: #999;
+}
+
+.hoverMenuItems:hover {
+  color: black;
+  font-weight: 700;
+}

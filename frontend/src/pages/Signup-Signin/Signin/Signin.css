@@ -1,0 +1,21 @@
+.signInContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 90vh;
+  gap: 1rem;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  gap: 2rem;
+}
+
