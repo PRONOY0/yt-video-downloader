@@ -14,14 +14,11 @@ const Signup = () => {
     e.preventDefault();
     let response;
     try {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("name", name);
       console.log("User Data:", { email, password });
       response = await axios.post(
         process.env.REACT_APP_API_URL + "/api/v1/Sign-Up",
         {
+          name,
           email,
           password,
         }

@@ -6,41 +6,44 @@ import { MdDownload } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FormControl, Select, MenuItem, Box } from "@mui/material";
+import { FormControl, Select, MenuItem } from "@mui/material";
 import Loader from "../../components/loader/Loader";
 
 const Video = () => {
   const [link, setLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [quality, setQuality] = useState("");
-  const [goDelete, setGoDelete] = useState(false);
-  const token = localStorage.getItem("token");
   const [isNOTPremiumUser, setIsNOTPremiumUser] = useState(true);
+  const token = localStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!link || !link.startsWith("http") || !quality) {
-      toast.error("Please enter a valid URL");
+      toast.error("Please enter a valid URL and select a quality option.");
       return;
     }
 
     try {
       setLoading(true);
+
+      // Send the request to download the video
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/v1/video`,
         { link, quality },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Send token if available
+          },
         }
       );
 
       if (response.data.success) {
-        const videoDownloadUrl = response.data.videoUrl;
-        const filename = response.data.filename;
+        const { videoUrl, filename } = response.data;
 
-        // Stream video download
-        const videoResponse = await fetch(videoDownloadUrl);
+        // Stream and download the video
+        const videoResponse = await fetch(videoUrl);
         const videoBlob = await videoResponse.blob();
 
         const linkElement = document.createElement("a");
@@ -53,10 +56,12 @@ const Video = () => {
 
         toast.success("The video was downloaded successfully!");
 
-        console.log("before", goDelete);
-        setGoDelete(true);
-        console.log("after", goDelete);
+        // Trigger video deletion after download
 
+        console.log(`filename is ${response.data.filename}`);
+        await deleteVideo(response.data.filename);
+
+        // Reset form
         setLink("");
         setQuality("");
       } else {
@@ -65,32 +70,38 @@ const Video = () => {
       setLoading(false);
     } catch (error) {
       toast.error("An error occurred while downloading the video.");
-      setLink("");
-      setQuality("");
       setLoading(false);
+      console.error(error);
+    }
+  };
+
+  const deleteVideo = async (filename) => {
+    try {
+      const deleteResponse = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/delete-video`,
+        { filename },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (deleteResponse.data.success) {
+        console.log("Video deleted successfully.");
+      } else {
+        console.error("Failed to delete video: ", deleteResponse.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting video:", error);
     }
   };
 
   useEffect(() => {
-    console.log("Inside the useEffect ", goDelete);
-
-    if (goDelete) {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/api/v1/delete-video`, {
-          goDelete: true,
-        })
-        .then((res) => console.log(res.data.message))
-        .catch((err) => console.error(err));
-    }
-  }, [goDelete]);
-
-  useEffect(() => {
     if (token) {
       setIsNOTPremiumUser(false);
-    } else {
-      setIsNOTPremiumUser(true);
     }
-  }, []);
+  }, [token]);
 
   return (
     <div className="home-container">

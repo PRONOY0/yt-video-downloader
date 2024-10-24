@@ -20,7 +20,7 @@ const Navbar = () => {
       </div>
 
       <div>
-        {token.length > 0 ? (
+        {token ? (
           <>
             <MdAccountCircle className="account-pfp" />
             <div className="profile-list"></div>
