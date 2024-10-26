@@ -1,5 +1,5 @@
 const ytDlpwrap = require("yt-dlp-wrap").default;
-const ytDlpWrap = new ytDlpwrap("../yt-dlp/yt-dlp.exe");
+const ytDlpWrap = new ytDlpwrap("../yt-dlp/yt-dlp");
 const fs = require("fs");
 const path = require("path");
 const ffmpeg = require("fluent-ffmpeg");
