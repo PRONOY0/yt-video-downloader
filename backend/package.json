@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon index.js",
     "build": "npm install",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "postinstall": "chmod +x ./yt-dlp/yt-dlp"
   },
   "keywords": [],
   "author": "",
